@@ -1,44 +1,53 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Mini E-Commerce Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg: #0f0f0f;
       --card-bg: #1a1a1a;
-      --muted: #aaa;
+      --text: #fff;
       --accent: #0af;
       --danger: #e33;
     }
+
     body {
       margin: 0;
-      font-family: system-ui, sans-serif;
+      font-family: 'Lexend', sans-serif;
       background: var(--bg);
-      color: #fff;
+      color: var(--text);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
+
     header {
       padding: 16px;
       background: #161616;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
       gap: 12px;
       position: sticky;
       top: 0;
       z-index: 50;
     }
+
     .search-box {
       display: flex;
       gap: 6px;
       flex: 1;
       max-width: 480px;
     }
+
     input {
       flex: 1;
       padding: 8px 12px;
@@ -46,34 +55,41 @@
       border-radius: 8px;
       background: #222;
       color: #fff;
+      font-family: 'Lexend', sans-serif;
     }
+
     button {
       padding: 8px 12px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       background: var(--accent);
-      color: #fff;
+      color: #000;
       font-weight: bold;
+      font-family: 'Lexend', sans-serif;
     }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
     .cat-bar {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
+
     .cat-btn {
       padding: 6px 12px;
       border-radius: 8px;
       background: #222;
       cursor: pointer;
       font-size: 14px;
-      color: var(--muted);
+      color: #aaa;
+      font-family: 'Lexend', sans-serif;
     }
+
     .cat-btn.active {
       background: var(--accent);
-      color: #fff;
+      color: #000;
     }
+
     #cartBtn {
       display: flex;
       align-items: center;
@@ -86,6 +102,7 @@
       flex: 1;
       padding: 20px;
     }
+
     #grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -96,63 +113,81 @@
       perspective: 1000px;
       cursor: pointer;
     }
+
     .card-inner {
       position: relative;
       width: 100%;
-      height: 320px;
+      height: 350px;
       transform-style: preserve-3d;
-      transition: transform 0.5s ease;
+      transition: transform 0.5s;
     }
+
     .card.flipped .card-inner {
       transform: rotateY(180deg);
     }
+
     .card-front, .card-back {
       position: absolute;
       width: 100%;
       height: 100%;
-      backface-visibility: hidden;
-      background: var(--card-bg);
       border-radius: 12px;
+      background: var(--card-bg);
+      backface-visibility: hidden;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      padding: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
+
     .card-front img {
       width: 100%;
-      height: 140px;
+      aspect-ratio: 1/1;
       object-fit: cover;
-      border-radius: 8px;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
     }
-    .card-front h3 {
-      margin: 10px 0 6px;
-      font-size: 1.1rem;
-    }
-    .meta {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: auto;
-    }
+
     .price-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0.75rem 1rem;
+      margin-top: auto;
     }
+
+    .price {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
     .add-btn {
       background: var(--accent);
-      color: #fff;
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-size: 14px;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.8rem;
       cursor: pointer;
+      font-weight: 600;
+      color: #000;
     }
+
     .card-back {
       transform: rotateY(180deg);
-      justify-content: center;
-      font-size: 14px;
+      padding: 1rem;
+      text-align: left;
+      align-items: flex-start;
+      justify-content: flex-start;
+      font-size: 0.95rem;
+    }
+
+    .card-back h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .card-back p {
       line-height: 1.4;
-      color: #ddd;
+      opacity: 0.85;
     }
 
     .empty-state {
@@ -161,11 +196,10 @@
       border-radius: 10px;
       background: rgba(255,255,255,0.05);
       text-align: center;
-      color: var(--muted);
+      color: #aaa;
       font-size: 15px;
     }
 
-    /* Lightbox Cart */
     .cart-modal {
       position: fixed;
       inset: 0;
@@ -175,7 +209,9 @@
       justify-content: center;
       z-index: 100;
     }
+
     .cart-modal.active { display: flex; }
+
     .cart-content {
       background: #1a1a1a;
       border-radius: 12px;
@@ -189,17 +225,20 @@
       flex-direction: column;
       gap: 12px;
     }
+
     .cart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .cart-items {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
+
     .cart-item {
       display: flex;
       align-items: center;
@@ -208,23 +247,20 @@
       padding: 8px;
       border-radius: 8px;
     }
+
     .cart-item img {
       width: 60px;
       height: 60px;
       object-fit: cover;
       border-radius: 6px;
     }
-    .cart-item-info {
-      flex: 1;
-    }
-    .cart-item-title { font-weight: bold; }
-    .cart-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+
+    .cart-item-info { flex: 1; }
+    .cart-item-title { font-weight: 600; }
+
+    .cart-actions { display: flex; align-items: center; gap: 6px; }
     .cart-actions button { padding: 4px 8px; font-size: 14px; }
-    .remove-btn { background: var(--danger); }
+    .remove-btn { background: var(--danger); color:#fff; border-radius:0.5rem; }
     .cart-footer {
       border-top: 1px solid #333;
       padding-top: 12px;
@@ -254,7 +290,6 @@
     <section id="grid"></section>
   </main>
 
-  <!-- Cart Modal -->
   <div class="cart-modal" id="cartModal" aria-hidden="true" role="dialog" aria-label="Shopping cart">
     <div class="cart-content">
       <div class="cart-header">
@@ -271,9 +306,9 @@
   <script>
     const products = [
       {id:1,title:'Neo Headset',price:1299,cat:'electronics',img:'https://picsum.photos/seed/p1/800',description:'Wireless headset with deep bass, 30h battery, comfy memory-foam earcups and detachable mic.'},
-      {id:2,title:'Lumen Lamp',price:459,cat:'home',img:'https://picsum.photos/seed/p2/800',description:'Minimal desk lamp with touch dimmer and warm-to-cool color temperatures. Perfect for night grinders.'},
-      {id:3,title:'Grav Boots',price:899,cat:'fashion',img:'https://picsum.photos/seed/p3/800/800',description:'High-grip sneaks with rugged soles and a subtle reflective trim. Lightweight and comfy.'},
-      {id:4,title:'Orbit Speaker',price:699,cat:'electronics',img:'https://picsum.photos/seed/p4/800',description:'Portable speaker with 360° sound and IPX5 splash resistance. Hits clean mids.'},
+      {id:2,title:'Lumen Lamp',price:459,cat:'home',img:'https://picsum.photos/seed/p2/800',description:'Minimal desk lamp with touch dimmer and warm-to-cool color temperatures.'},
+      {id:3,title:'Grav Boots',price:899,cat:'fashion',img:'https://picsum.photos/seed/p3/800',description:'High-grip sneakers with rugged soles and a subtle reflective trim.'},
+      {id:4,title:'Orbit Speaker',price:699,cat:'electronics',img:'https://picsum.photos/seed/p4/800',description:'Portable speaker with 360° sound and IPX5 splash resistance.'},
       {id:5,title:'Slip Hoodie',price:399,cat:'fashion',img:'https://picsum.photos/seed/p5/800',description:'Soft fleece hoodie, oversized fit, street-ready.'}
     ];
 
@@ -288,26 +323,18 @@
     const cartTotal = document.getElementById('cartTotal');
     const closeCart = document.getElementById('closeCart');
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cart = JSON.parse(localStorage.getItem('cart')||'[]');
 
-    function saveCart() {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
-
-    function money(n) {
-      return new Intl.NumberFormat('en-ZA', { style:'currency', currency:'ZAR' }).format(n);
-    }
+    function money(n) { return new Intl.NumberFormat('en-ZA',{style:'currency',currency:'ZAR'}).format(n); }
 
     function updateCartDisplay() {
       cartCount.textContent = cart.reduce((a,c)=>a+c.qty,0);
       cartItems.innerHTML = '';
-      if (!cart.length) {
-        cartItems.innerHTML = '<p style="color:var(--muted)">Cart is empty</p>';
-      } else {
+      if(!cart.length){ cartItems.innerHTML='<p style="color:#aaa">Cart is empty</p>'; }
+      else {
         cart.forEach(item=>{
-          const row = document.createElement('div');
-          row.className = 'cart-item';
-          row.innerHTML = `
+          const row = document.createElement('div'); row.className='cart-item';
+          row.innerHTML=`
             <img src="${item.img}" alt="${item.title}">
             <div class="cart-item-info">
               <div class="cart-item-title">${item.title}</div>
@@ -318,129 +345,73 @@
             </div>
           `;
           row.querySelector('.remove-btn').addEventListener('click',()=>{
-            cart = cart.filter(p=>p.id!==item.id);
-            saveCart();
-            updateCartDisplay();
+            cart = cart.filter(p=>p.id!==item.id); updateCartDisplay(); localStorage.setItem('cart',JSON.stringify(cart));
           });
           cartItems.appendChild(row);
         });
       }
-      const total = cart.reduce((a,c)=>a+c.price*c.qty,0);
-      cartTotal.textContent = money(total);
+      cartTotal.textContent = money(cart.reduce((a,c)=>a+c.price*c.qty,0));
+      localStorage.setItem('cart',JSON.stringify(cart));
     }
 
-    function addToCart(product) {
-      const existing = cart.find(p=>p.id===product.id);
-      if (existing) {
-        existing.qty++;
-      } else {
-        cart.push({...product, qty:1});
-      }
-      saveCart();
+    function addToCart(product){
+      const exist = cart.find(p=>p.id===product.id);
+      if(exist) exist.qty++;
+      else cart.push({...product,qty:1});
       updateCartDisplay();
     }
 
-    // URL helpers
-    function updateURL(q, cat) {
-      const params = new URLSearchParams();
-      if (q) params.set("q", q);
-      if (cat && cat !== "all") params.set("cat", cat);
-      const newUrl = window.location.pathname + (params.toString() ? "?" + params.toString() : "");
-      history.replaceState(null, "", newUrl);
-    }
-    function readURL() {
-      const params = new URLSearchParams(window.location.search);
-      return { q: params.get("q") || "", cat: params.get("cat") || "all" };
-    }
+    function render(list){
+      grid.innerHTML='';
+      if(!list.length){ grid.innerHTML='<div class="empty-state">No products found</div>'; return; }
+      list.forEach(p=>{
+        const card = document.createElement('article'); card.className='card';
+        const inner = document.createElement('div'); inner.className='card-inner';
 
-    function render(list) {
-      grid.innerHTML = '';
-      if (!list.length) {
-        grid.innerHTML = '<div class="empty-state">No products found.<br><small>Try different search or clear filters.</small></div>';
-        return;
-      }
-      list.forEach(p => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.dataset.id = p.id;
-        const inner = document.createElement('div');
-        inner.className = 'card-inner';
-
-        const front = document.createElement('div');
-        front.className = 'card-front';
-        front.innerHTML = `
-          <img src="${p.img}" alt="${p.title}" loading="lazy" />
-          <h3>${p.title}</h3>
-          <div class="meta">${p.cat.toUpperCase()} • SKU-${p.id}</div>
+        const front = document.createElement('div'); front.className='card-front';
+        front.innerHTML=`
+          <img src="${p.img}" alt="${p.title}" loading="lazy">
           <div class="price-row">
-            <div style="font-weight:800">${money(p.price)}</div>
+            <span class="price">${money(p.price)}</span>
             <button class="add-btn">+</button>
           </div>
         `;
-        const back = document.createElement('div');
-        back.className = 'card-back';
-        back.innerHTML = `<div>${p.description}</div>`;
 
-        inner.appendChild(front);
-        inner.appendChild(back);
-        card.appendChild(inner);
-        grid.appendChild(card);
+        const back = document.createElement('div'); back.className='card-back';
+        back.innerHTML=`<h3>${p.title}</h3><p>${p.description}</p>`;
 
-        card.addEventListener('click', e => {
-          if (e.target.classList.contains('add-btn')) return;
-          document.querySelectorAll('.card.flipped').forEach(c => { if (c!==card) c.classList.remove('flipped'); });
-          card.classList.toggle('flipped');
-        });
+        inner.append(front,back); card.appendChild(inner); grid.appendChild(card);
 
-        card.tabIndex = 0;
-        card.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); card.click(); } });
-
-        front.querySelector('.add-btn').addEventListener('click', e => {
-          e.stopPropagation();
-          addToCart(p);
-        });
+        card.addEventListener('click',e=>{ if(e.target.classList.contains('add-btn')) return; card.classList.toggle('flipped'); });
+        front.querySelector('.add-btn').addEventListener('click',e=>{ e.stopPropagation(); addToCart(p); });
       });
     }
 
-    function filterAndRender() {
+    function filterAndRender(){
       const q = searchInput.value.trim().toLowerCase();
       const activeBtn = document.querySelector('.cat-btn.active');
-      const cat = activeBtn ? activeBtn.dataset.cat : 'all';
-      const filtered = products.filter(p => {
-        const matchesCat = (cat==='all')||(p.cat===cat);
-        const matchesQ = !q || p.title.toLowerCase().includes(q) || p.cat.toLowerCase().includes(q) || (`sku-${p.id}`).includes(q) || p.description.toLowerCase().includes(q);
-        return matchesCat && matchesQ;
+      const cat = activeBtn? activeBtn.dataset.cat : 'all';
+      const filtered = products.filter(p=>{
+        const matchCat=(cat==='all')||(p.cat===cat);
+        const matchQ = !q || p.title.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||p.description.toLowerCase().includes(q)||(`sku-${p.id}`).includes(q);
+        return matchCat&&matchQ;
       });
-      updateURL(q, cat);
       render(filtered);
     }
 
-    // init
-    const { q, cat } = readURL();
-    searchInput.value = q;
-    document.querySelectorAll('.cat-btn').forEach(btn=>{
-      if (btn.dataset.cat===cat) {
-        document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-      }
-    });
-    filterAndRender();
-    updateCartDisplay();
+    filterAndRender(); updateCartDisplay();
 
-    searchInput.addEventListener('input', filterAndRender);
-    searchBtn.addEventListener('click', filterAndRender);
-    clearBtn.addEventListener('click', ()=>{ searchInput.value=''; filterAndRender(); searchInput.focus(); });
-    searchInput.addEventListener('keydown', e=>{ if (e.key==='Enter') filterAndRender(); });
-    document.querySelectorAll('.cat-btn').forEach(btn=>{
-      btn.addEventListener('click', ()=>{ document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterAndRender(); });
-    });
-    document.addEventListener('click', e=>{ if (!e.target.closest('.card')) document.querySelectorAll('.card.flipped').forEach(c=>c.classList.remove('flipped')); });
-    window.addEventListener('resize', ()=>{ document.querySelectorAll('.card.flipped').forEach(c=>c.classList.remove('flipped')); });
+    searchInput.addEventListener('input',filterAndRender);
+    searchBtn.addEventListener('click',filterAndRender);
+    clearBtn.addEventListener('click',()=>{ searchInput.value=''; filterAndRender(); searchInput.focus(); });
 
-    // cart modal handlers
-    cartBtn.addEventListener('click', ()=>{ cartModal.classList.add('active'); cartModal.setAttribute('aria-hidden','false'); closeCart.focus(); });
-    closeCart.addEventListener('click', ()=>{ cartModal.classList.remove('active'); cartModal.setAttribute('aria-hidden','true'); cartBtn.focus(); });
-    window.addEventListener('keydown', e=>{ if (e.key==='Escape' && cartModal.classList.contains('active')) closeCart.click(); });
+    document.querySelectorAll('.cat-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{ document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterAndRender(); });
+    });
+
+    cartBtn.addEventListener('click',()=>{ cartModal.classList.add('active'); cartModal.setAttribute('aria-hidden','false'); closeCart.focus(); });
+    closeCart.addEventListener('click',()=>{ cartModal.classList.remove('active'); cartModal.setAttribute('aria-hidden','true'); cartBtn.focus(); });
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&cartModal.classList.contains('active')) closeCart.click(); });
   </script>
 </body>
 </html>
